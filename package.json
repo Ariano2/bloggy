@@ -4,7 +4,9 @@
   "description": "AI powered blogging platform",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon ./src/app.js",
+    "start": "node ./src/app.js"
   },
   "keywords": [
     "Blogs",
@@ -13,6 +15,13 @@
   "author": "Aryan",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.21.2"
+    "bcrypt": "^5.1.1",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.13.1",
+    "pg": "^8.14.1",
+    "postgres": "^3.4.5"
   }
 }
