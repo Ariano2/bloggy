@@ -5,6 +5,7 @@ const dotenv = require('dotenv').config();
 const authRouter = require('./routers/authRouter');
 const blogRouter = require('./routers/blogRouter');
 const userRouter = require('./routers/userRouter');
+const commentsRouter = require('./routers/commentsRouter');
 const cookieParser = require('cookie-parser');
 const app = express();
 const port = 9000;
@@ -15,6 +16,7 @@ app.use(cookieParser());
 app.use('/', authRouter);
 app.use('/', userRouter);
 app.use('/', blogRouter);
+app.use('/', commentsRouter);
 
 app.listen(port, async () => {
   try {

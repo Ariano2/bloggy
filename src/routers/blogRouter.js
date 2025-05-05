@@ -4,6 +4,7 @@ const User = require('../models/user');
 const { userAuth } = require('../middlewares/auth');
 const validateBlog = require('../validators/validateBlog');
 const Blog = require('../models/blog');
+const Comment = require('../models/comments');
 
 blogRouter.post('/api/blog', userAuth, async (req, res) => {
   const { title, banner, des, content, tags, draft = false } = req.body;
@@ -103,6 +104,16 @@ blogRouter.get('/api/blogFeed', async (req, res) => {
   }
 });
 
+blogRouter.get('/api/blog/user', userAuth, async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const blogList = await Blog.find({ author: userId });
+    res.json({ message: 'fetched users blogs successfully', blogList });
+  } catch (err) {
+    res.status(400).send('ERROR : ' + err.message);
+  }
+});
+
 blogRouter.delete('/api/deleteBlog/:blogId', userAuth, async (req, res) => {
   const loggedInUserId = req.user._id;
   const blogId = req.params.blogId;
@@ -118,6 +129,11 @@ blogRouter.delete('/api/deleteBlog/:blogId', userAuth, async (req, res) => {
     }
     // deletion here
     await Blog.findByIdAndDelete(blogId);
+    // now delete all comments associated with the blog
+    deleteComments = await Comment.find({ blog_id: blogId });
+    deleteComments.map(async (comment) => {
+      await Comment.findByIdAndDelete(comment._id);
+    });
     return res.status(200).json({ message: 'Blog deleted successfully' });
   } catch (err) {
     return res.status(400).send('ERROR: ' + err.message);
