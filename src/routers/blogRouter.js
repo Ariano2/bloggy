@@ -104,6 +104,22 @@ blogRouter.get('/api/blogFeed', async (req, res) => {
   }
 });
 
+blogRouter.get('/api/blogFeed/:blogId', async (req, res) => {
+  try {
+    const blogId = req.params.blogId;
+    const blog = await Blog.findOne({ _id: blogId }).populate(
+      'author',
+      'firstName'
+    );
+    if (!blog) {
+      return res.status(400).json({ message: 'Blog could not be loaded' });
+    }
+    res.json({ message: 'Blogs Fetched Successfully', blog });
+  } catch (err) {
+    res.status(400).send('Error' + err.message);
+  }
+});
+
 blogRouter.get('/api/blog/user', userAuth, async (req, res) => {
   try {
     const userId = req.user._id;

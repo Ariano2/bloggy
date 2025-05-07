@@ -24,7 +24,7 @@ authRouter.post('/signup', async (req, res, next) => {
       }
       const JWT = await user.generateJWT();
       res.cookie('token', JWT, { maxAge: process.env.COOKIE_EXPIRY_MS });
-      res.send('Signed Up Successfully');
+      res.json({ user, message: 'Sign Up Successfull' });
     }
   } catch (err) {
     return res.status(400).send('ERROR: ' + err.message);

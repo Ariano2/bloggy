@@ -81,7 +81,12 @@ commentsRouter.get('/api/comment/fetch/:blogId', async (req, res) => {
     if (!blog) {
       throw new Error('Invalid Blog Id');
     }
-    const comments = await Comment.find({ blog_id: blogId });
+    const comments = await Comment.find({ blog_id: blogId }).populate([
+      {
+        path: 'commented_by',
+        select: 'firstName',
+      },
+    ]);
     res.json({ message: 'Comments Fetched successfully', comments });
   } catch (err) {
     res.status(400).send('ERROR : ' + err.message);
