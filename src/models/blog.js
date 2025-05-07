@@ -18,6 +18,7 @@ const blogSchema = mongoose.Schema(
     content: {
       type: [],
     },
+    summary: { type: String, default: '' },
     tags: {
       type: [String],
     },

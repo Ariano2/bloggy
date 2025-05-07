@@ -5,6 +5,7 @@ const { userAuth } = require('../middlewares/auth');
 const validateBlog = require('../validators/validateBlog');
 const Blog = require('../models/blog');
 const Comment = require('../models/comments');
+const generateSummaryAndSave = require('../utils/generateSummary');
 
 blogRouter.post('/api/blog', userAuth, async (req, res) => {
   const { title, banner, des, content, tags, draft = false } = req.body;
@@ -38,7 +39,7 @@ blogRouter.post('/api/blog', userAuth, async (req, res) => {
 
       // Save to MongoDB
       const savedBlog = await newBlog.save();
-
+      generateSummaryAndSave(savedBlog._id, content.join(' '));
       res.status(201).json({
         message: 'Blog created successfully',
         blog: savedBlog,
@@ -72,6 +73,9 @@ blogRouter.patch('/api/editBlog/:blogId', userAuth, async (req, res) => {
     blog.content = content || blog.content;
     blog.tags = tags || blog.tags;
     await blog.save();
+    if (content) {
+      generateSummaryAndSave(blog._id, content.join(' '));
+    }
     return res.json({
       message: 'Blog Updated Successfully',
       blog,
@@ -101,6 +105,30 @@ blogRouter.get('/api/blogFeed', async (req, res) => {
     res.json({ message: 'Blogs Fetched Successfully', blogs });
   } catch (err) {
     res.status(400).send('Error' + err.message);
+  }
+});
+
+blogRouter.get('/api/blogFeed/summarized', async (req, res) => {
+  try {
+    const blogs = await Blog.find({ draft: false }, 'summary title _id').sort({
+      publishedAt: -1,
+    });
+
+    if (!blogs || blogs.length === 0) {
+      return res.status(404).json({ message: 'No summaries found' });
+    }
+
+    const summariesOfBlogs = blogs.map((blog) => ({
+      id: blog._id,
+      title: blog.title,
+      summary: blog.summary || 'Summary not available yet',
+    }));
+
+    res.json({ summariesOfBlogs, message: 'Success' });
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: 'Error fetching summaries: ' + err.message });
   }
 });
 
