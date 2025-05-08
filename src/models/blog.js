@@ -61,5 +61,23 @@ const blogSchema = mongoose.Schema(
   }
 );
 
+blogSchema.methods.incrementLikes = async function () {
+  this.activity.total_likes = this.activity.total_likes + 1;
+  await this.save();
+};
+
+blogSchema.methods.decrementLikes = async function () {
+  this.activity.total_likes = this.activity.total_likes - 1;
+  await this.save();
+};
+
+blogSchema.methods.incrementRead = function () {
+  this.activity.total_reads += 1;
+};
+
+blogSchema.methods.incrementComments = function () {
+  this.activity.total_comments += 1;
+};
+
 Blog = mongoose.model('Blog', blogSchema);
 module.exports = Blog;

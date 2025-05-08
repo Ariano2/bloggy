@@ -26,6 +26,8 @@ commentsRouter.post('/api/comment/add/:blogId', userAuth, async (req, res) => {
         isReply: false,
       });
       await savedComment.populate('commented_by', 'firstName');
+      blog.incrementComments();
+      await blog.save();
       await savedComment.save();
       res.json({ message: 'Comment added successfully ', savedComment });
     }

@@ -28,7 +28,7 @@ router.post('/summarize', (req, res) => {
         .json({ error: 'Summarization failed', details: errorOutput });
     }
 
-    // 🧼 Final cleanup of summary to remove unwanted path info
+    //  Final cleanup of summary to remove unwanted path info
     const cleanSummary = output
       .replace(
         /(?:[A-Z]:)?\\(?:Users|AppData|[^\\]+\\)*site-packages\r?\n?/gi,

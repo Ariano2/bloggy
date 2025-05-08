@@ -142,6 +142,8 @@ blogRouter.get('/api/blogFeed/:blogId', async (req, res) => {
     if (!blog) {
       return res.status(400).json({ message: 'Blog could not be loaded' });
     }
+    blog.incrementRead();
+    await blog.save();
     res.json({ message: 'Blogs Fetched Successfully', blog });
   } catch (err) {
     res.status(400).send('Error' + err.message);

@@ -7,6 +7,7 @@ const blogRouter = require('./routers/blogRouter');
 const userRouter = require('./routers/userRouter');
 const commentsRouter = require('./routers/commentsRouter');
 const summarizeRouter = require('./routers/summarize');
+const likesRouter = require('./routers/likeRouter');
 const cookieParser = require('cookie-parser');
 const app = express();
 const cors = require('cors');
@@ -26,6 +27,7 @@ app.use('/', userRouter);
 app.use('/', blogRouter);
 app.use('/', commentsRouter);
 app.use('/', summarizeRouter);
+app.use('/', likesRouter);
 
 app.listen(port, async () => {
   try {

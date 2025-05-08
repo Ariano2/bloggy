@@ -3,7 +3,6 @@ const authRouter = express.Router();
 const validateSignup = require('../validators/validateSignup');
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
-const { TokenExpiredError } = require('jsonwebtoken');
 
 authRouter.post('/signup', async (req, res, next) => {
   const data = req.body;
